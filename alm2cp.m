@@ -1,35 +1,35 @@
 %% Alamode-CP2K port, designed by Ruilin Mao, ICQM, Peking University
 % email: mrlvip@163.com, to generate displaced CP2K input files for alamode
 %% read xyzfiles
-xyzfl= fileread("GaN_0.xyz");
+xyzfl= fileread("STO.xyz");
 AA = regexp(xyzfl, '\r\n|\r|\n', 'split');
 cc=str2double(cellstr(AA{1}));
 coordlst=zeros(cc,3);
 numcell=cell(cc,1);
 angsperbohr=0.52917721092;
-amp=0.01;
-vc1= [6.4643049841        0.0000000000        0.0000000000];
-vc2= [3.2321524920        5.5982523340        0.0000000000];
-vc3= [0.0000000000        0.0000000000       40.8555098589];
+amp=0.02;
+vc1= [7.7880353928         0.0000000000         0.0000000000];
+vc2= [0.0000000000         7.7880353928         0.0000000000];
+vc3= [0.0000000000         0.0000000000        31.6515350342];
 bs1= vc1/sqrt(sum(vc1.^2));
-bs2= vc2/sqrt(sum(vc2.^2));
-bs3= vc3/sqrt(sum(vc3.^2));
+bs2= vc2/sqrt(sum(vc1.^2));
+bs3= vc3/sqrt(sum(vc1.^2));
 for i=1:cc
     spltcoordlst=regexp(AA{i+2},' *','split');
-    numcell{i}=spltcoordlst{1};
-    coordlst(i,1)=str2double(spltcoordlst{2});
-    coordlst(i,2)=str2double(spltcoordlst{3});
-    coordlst(i,3)=str2double(spltcoordlst{4});       
+    numcell{i}=spltcoordlst{2};
+    coordlst(i,1)=str2double(spltcoordlst{3});
+    coordlst(i,2)=str2double(spltcoordlst{4});
+    coordlst(i,3)=str2double(spltcoordlst{5});       
 end
 %% read (an)harmonic parameters
-str = fileread("config_GaN");
+str = fileread("STOAPB.pattern_HARMONIC");
 A = regexp(str, '\r\n|\r|\n', 'split');
 item=find(contains(A ,':'));
 groupnum=length(item);
 itemnum=[];
 % displace the atom according to configuration files
 formatspec='displace%d.xyz';
-coordspc='%s  %f  %f  %f\n';
+coordspc='%s  %.16f  %.16f  %.16f\n';
 for i=1:groupnum
     spltstr=regexp(A{item(i)},':','split');
     itemnum=str2double(spltstr{2});
@@ -50,7 +50,7 @@ for i=1:groupnum
     fclose(filid);
 end
 %% generate of CP2K input file
-cpcode= fileread("OTgn.inp");
+cpcode= fileread("OTmw.inp");
 cdd = regexp(cpcode, '\r\n|\r|\n', 'split');
 item1=find(contains(cdd,'PROJECT'));
 item2=find(contains(cdd,'COORD_FILE_NAME'));
@@ -59,6 +59,7 @@ filespec='OT%d.inp';
 formatspec0='PROJECT OT%d';
 formatspec1='COORD_FILE_NAME displace%d.xyz';
 formatspec2='FILENAME =ff%d.fc';
+%formatspec3='FILENAME =POLAR%d';
 formspecs='%s\n';
 [~,fh]=size(cdd);
 for i=1:groupnum
