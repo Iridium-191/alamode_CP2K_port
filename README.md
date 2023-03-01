@@ -1,5 +1,5 @@
-# alamode_CP2K_port
-A port to make CP2K input files for fc calculation of alamode software
+# alamode_CP2K_Toolbox
+A port to make CP2K input files for fc calculation of alamode software and some useful postprocessing tools
 
 Discription:
 
@@ -8,6 +8,10 @@ cat2fc.m  : creat fractinal coordinate data from cartesian coordinate of xyz fil
 alm2cp.m  : using  MATLAB to create CP2K input files and coordinate files from xyz files and configuration files
 
 fc2alm.m  : using MATLAB to create alamode input DFSETs from force files exported from CP2K and configuration files
+
+drawspec.m : using MATLAB to draw spectral heat conductivity in form of .kl.spec
+
+drawmodes.m : using MATLAB to draw phonon eigenmodes of system 
 
 Using:
 
